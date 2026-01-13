@@ -64,7 +64,7 @@ async function startServer() {
 ╠════════════════════════════════════════╣
 ║  HTTP API:    http://localhost:${PORT}  ║
 ║  WebSocket:   ws://localhost:${PORT}/signaling
-║  Redis:       ${REDIS_HOST}:${REDIS_PORT}
+║  Redis:       ${REDIS_URL}
 ╚════════════════════════════════════════╝
     `);
   });
