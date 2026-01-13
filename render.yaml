@@ -12,16 +12,11 @@ services:
         value: production
       - key: PORT
         value: 10000
-      - key: REDIS_HOST
+      - key: REDIS_URL
         fromService:
           type: redis
           name: chat-redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: chat-redis
-          property: port
+          property: connectionString
       - key: SESSION_TIMEOUT
         value: 3600000
       - key: CORS_ORIGIN
