@@ -1,0 +1,50 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: chat-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: chat-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: chat-redis
+          property: port
+      - key: SESSION_TIMEOUT
+        value: 3600000
+      - key: CORS_ORIGIN
+        sync: false
+        # Manually set to your frontend URL after deployment
+
+  # Frontend Static Site
+  - type: web
+    name: chat-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+        # Manually set to your backend URL
+      - key: VITE_WS_URL
+        sync: false
+        # Manually set to your backend URL (wss://)
+
+databases:
+  - name: chat-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru
