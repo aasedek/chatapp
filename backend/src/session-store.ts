@@ -12,13 +12,19 @@ export class SessionStore {
   private client: ReturnType<typeof createClient>;
   private connected: boolean = false;
 
-  constructor(host: string = 'localhost', port: number = 6379) {
-    this.client = createClient({
-      socket: {
-        host,
-        port,
-      },
-    });
+  constructor(urlOrHost: string = 'localhost', port?: number) {
+    // If urlOrHost starts with redis://, use it as URL
+    // Otherwise, use host/port format
+    if (urlOrHost.startsWith('redis://') || urlOrHost.startsWith('rediss://')) {
+      this.client = createClient({ url: urlOrHost });
+    } else {
+      this.client = createClient({
+        socket: {
+          host: urlOrHost,
+          port: port || 6379,
+        },
+      });
+    }
 
     this.client.on('error', (err) => console.error('Redis Client Error:', err));
     this.client.on('connect', () => console.log('Redis Client Connected'));

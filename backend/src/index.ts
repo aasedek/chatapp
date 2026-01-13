@@ -12,13 +12,13 @@ import { SignalingService } from './signaling-service';
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
-const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
-const REDIS_PORT = parseInt(process.env.REDIS_PORT || '6379', 10);
+const REDIS_URL = process.env.REDIS_URL || process.env.REDIS_HOST || 'localhost';
+const REDIS_PORT = process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT, 10) : undefined;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 async function startServer() {
   // Initialize session store
-  const sessionStore = new SessionStore(REDIS_HOST, REDIS_PORT);
+  const sessionStore = new SessionStore(REDIS_URL, REDIS_PORT);
   await sessionStore.connect();
 
   // Create Express app
